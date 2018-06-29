@@ -246,27 +246,23 @@
   };
 
   PieceLabel.prototype.fillText = function (text, position, fontColor) {
-    var ctx = this.ctx;
-    if (typeof text === 'object') {
-      ctx.drawImage(text, position.x - text.width / 2, position.y - text.height / 2, text.width, text.height);
-    } else {
-      ctx.fillStyle = fontColor;
-      ctx.textBaseline = 'top';
-      ctx.textAlign = 'center';
-
-      if (this.textShadow) {
-        ctx.shadowOffsetX = this.shadowOffsetX;
-        ctx.shadowOffsetY = this.shadowOffsetY;
-        ctx.shadowColor = this.shadowColor;
-        ctx.shadowBlur = this.shadowBlur;
-      }
-
-      ctx.fillText(text, position.x, position.y - this.fontSize / 2);
-
-      ctx.shadowBlur = 0;
-      ctx.shadowColor = 'rgba(0,0,0,0)';
-    }
-  };
+        var ctx = this.ctx;
+        if (typeof text === 'object') {
+          ctx.drawImage(text, position.x - text.width / 2, position.y - text.height / 2, text.width, text.height);
+        } else {
+          ctx.fillStyle = fontColor;
+          ctx.textBaseline = 'top';
+          ctx.textAlign = 'center';
+          var split_string = text.split('\n');
+          for(var i=0;i<split_string.length;i++){
+            var new_pos = {
+              x: position.x,
+              y: (position.y - this.fontSize / 2) + (i*this.fontSize)
+            };
+            ctx.fillText(split_string[i], new_pos.x, new_pos.y);
+          }
+        }
+      };
 
   PieceLabel.prototype.loadImage = function (obj) {
     var image = new Image();
